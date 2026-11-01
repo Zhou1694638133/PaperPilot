@@ -1,0 +1,25 @@
+{
+  "id": "chinese_pdf",
+  "name": "中文论文排版",
+  "description": "复用全文译文，补充图表和算法文字，使用宋体排版并保留原图、公式与引用。",
+  "version": "1.0.8",
+  "requires_model": true,
+  "template_version": "1.0.8",
+  "template_selection": "original_pdf_then_explicit_latex",
+  "templates": [
+    {
+      "id": "zh-single-column",
+      "columns": 1,
+      "path": "templates/single-column.tex",
+      "sha256": "9785c9037c785bfa378465f8b3d1554252e1fc0e3f06e0c559557d095fd7b6e5"
+    },
+    {
+      "id": "zh-two-column",
+      "columns": 2,
+      "path": "templates/two-column.tex",
+      "sha256": "ac26500efcb37ad16e37b9329113f7f0166c8c495a6f0233611f0dd71e3e65cc"
+    }
+  ],
+  "download_filename": "{original_paper_title}翻译版.{extension}",
+  "render_version": "1.0.5"
+}

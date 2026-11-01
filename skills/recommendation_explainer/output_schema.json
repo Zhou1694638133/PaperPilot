@@ -1,0 +1,65 @@
+{
+  "additionalProperties": true,
+  "properties": {
+    "coverage": {
+      "enum": [
+        "abstract",
+        "fulltext"
+      ],
+      "title": "Coverage",
+      "type": "string"
+    },
+    "markdown": {
+      "title": "Markdown",
+      "type": "string"
+    },
+    "mode": {
+      "enum": [
+        "live",
+        "demo"
+      ],
+      "title": "Mode",
+      "type": "string"
+    },
+    "skill_version": {
+      "title": "Skill Version",
+      "type": "string"
+    },
+    "source": {
+      "title": "Source",
+      "type": "string"
+    },
+    "recommendation": {
+      "additionalProperties": true,
+      "title": "Recommendation",
+      "type": "object"
+    },
+    "evidence": {
+      "items": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "title": "Evidence",
+      "type": "array"
+    },
+    "unknowns": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Unknowns",
+      "type": "array"
+    }
+  },
+  "required": [
+    "coverage",
+    "markdown",
+    "mode",
+    "skill_version",
+    "source",
+    "recommendation",
+    "evidence",
+    "unknowns"
+  ],
+  "title": "ExplanationResult",
+  "type": "object"
+}

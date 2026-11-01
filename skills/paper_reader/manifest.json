@@ -1,0 +1,7 @@
+{
+  "id": "paper_reader",
+  "name": "结构化论文精读",
+  "description": "摘要或已解析全文：研究问题、方法、实验、局限、研究关联与精确证据位置；全文分块保存。",
+  "version": "2.0.0",
+  "requires_model": true
+}

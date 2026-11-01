@@ -1,0 +1,29 @@
+\documentclass[UTF8,fontset=none,10pt]{ctexart}
+\usepackage[letterpaper,margin=18mm,columnsep=7mm]{geometry}
+\setCJKmainfont{SimSun}[AutoFakeBold=2.5]
+\setCJKsansfont{SimSun}[AutoFakeBold=2.5]
+\setCJKmonofont{SimSun}
+\setmainfont{Times New Roman}
+\setmonofont{Consolas}
+\usepackage[table]{xcolor}
+\usepackage{amsmath,amssymb,amsthm,graphicx,booktabs,multirow,enumitem,algorithm,algorithmic,tcolorbox,subcaption,nicefrac}
+\usepackage[numbers,sort&compress]{natbib}
+\usepackage[hidelinks]{hyperref}
+\renewcommand{\abstractname}{摘要}
+\renewcommand{\refname}{参考文献}
+\floatname{algorithm}{算法}
+\renewcommand{\algorithmicfor}{\textbf{对于}}
+\renewcommand{\algorithmicdo}{\textbf{执行}}
+\renewcommand{\algorithmicend}{\textbf{结束}}
+\newenvironment{ack}{\section*{致谢}}{}
+\ctexset{section={format=\large\bfseries},subsection={format=\normalsize\bfseries},subsubsection={format=\normalsize\bfseries}}
+\captionsetup{font=small,labelfont=bf}
+\tcbuselibrary{breakable}
+\tcbset{breakable,coltitle=black,colbacktitle=white,colback=white,colframe=black,fonttitle=\bfseries}
+\pagestyle{plain}
+\setlength{\parindent}{2em}
+\setlength{\parskip}{2pt}
+\setlength{\emergencystretch}{2em}
+\linespread{1.12}
+\newcommand{\fitdisplay}[1]{\sbox0{$\displaystyle #1$}\ifdim\wd0>0.94\columnwidth\resizebox{0.94\columnwidth}{!}{\usebox0}\else\usebox0\fi}
+\begin{document}

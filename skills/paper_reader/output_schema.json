@@ -1,0 +1,93 @@
+{
+  "$defs": {
+    "AggregatedEvidence": {
+      "properties": {
+        "text": {
+          "title": "Text",
+          "type": "string"
+        },
+        "evidence": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence",
+          "type": "array"
+        }
+      },
+      "required": [
+        "text",
+        "evidence"
+      ],
+      "title": "AggregatedEvidence",
+      "type": "object"
+    }
+  },
+  "additionalProperties": true,
+  "properties": {
+    "coverage": {
+      "enum": [
+        "abstract",
+        "fulltext"
+      ],
+      "title": "Coverage",
+      "type": "string"
+    },
+    "markdown": {
+      "title": "Markdown",
+      "type": "string"
+    },
+    "mode": {
+      "enum": [
+        "live",
+        "demo"
+      ],
+      "title": "Mode",
+      "type": "string"
+    },
+    "skill_version": {
+      "title": "Skill Version",
+      "type": "string"
+    },
+    "source": {
+      "title": "Source",
+      "type": "string"
+    },
+    "research_question": {
+      "$ref": "#/$defs/AggregatedEvidence"
+    },
+    "method": {
+      "$ref": "#/$defs/AggregatedEvidence"
+    },
+    "experiments": {
+      "$ref": "#/$defs/AggregatedEvidence"
+    },
+    "limitations": {
+      "$ref": "#/$defs/AggregatedEvidence"
+    },
+    "research_relation": {
+      "$ref": "#/$defs/AggregatedEvidence"
+    },
+    "unknowns": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Unknowns",
+      "type": "array"
+    }
+  },
+  "required": [
+    "coverage",
+    "markdown",
+    "mode",
+    "skill_version",
+    "source",
+    "research_question",
+    "method",
+    "experiments",
+    "limitations",
+    "research_relation",
+    "unknowns"
+  ],
+  "title": "ReadingResult",
+  "type": "object"
+}

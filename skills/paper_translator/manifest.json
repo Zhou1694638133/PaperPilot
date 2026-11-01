@@ -1,0 +1,7 @@
+{
+  "id": "paper_translator",
+  "name": "可恢复双语翻译",
+  "description": "摘要或已解析全文逐段翻译；锁定术语版本，保护公式、引用、代码、表格与参考文献，保存检查点。",
+  "version": "2.0.0",
+  "requires_model": true
+}

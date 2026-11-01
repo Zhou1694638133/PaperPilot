@@ -1,0 +1,95 @@
+{
+  "$defs": {
+    "AlignedParagraph": {
+      "additionalProperties": true,
+      "properties": {
+        "paragraph_id": {
+          "title": "Paragraph Id",
+          "type": "string"
+        },
+        "source_hash": {
+          "title": "Source Hash",
+          "type": "string"
+        },
+        "source": {
+          "title": "Source",
+          "type": "string"
+        },
+        "translation": {
+          "title": "Translation",
+          "type": "string"
+        }
+      },
+      "required": [
+        "paragraph_id",
+        "source_hash",
+        "source",
+        "translation"
+      ],
+      "title": "AlignedParagraph",
+      "type": "object"
+    }
+  },
+  "additionalProperties": true,
+  "properties": {
+    "coverage": {
+      "enum": [
+        "abstract",
+        "fulltext"
+      ],
+      "title": "Coverage",
+      "type": "string"
+    },
+    "markdown": {
+      "title": "Markdown",
+      "type": "string"
+    },
+    "mode": {
+      "enum": [
+        "live",
+        "demo"
+      ],
+      "title": "Mode",
+      "type": "string"
+    },
+    "skill_version": {
+      "title": "Skill Version",
+      "type": "string"
+    },
+    "source": {
+      "title": "Source",
+      "type": "string"
+    },
+    "alignment": {
+      "items": {
+        "$ref": "#/$defs/AlignedParagraph"
+      },
+      "title": "Alignment",
+      "type": "array"
+    },
+    "glossary": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "title": "Glossary",
+      "type": "object"
+    },
+    "qa": {
+      "additionalProperties": true,
+      "title": "Qa",
+      "type": "object"
+    }
+  },
+  "required": [
+    "coverage",
+    "markdown",
+    "mode",
+    "skill_version",
+    "source",
+    "alignment",
+    "glossary",
+    "qa"
+  ],
+  "title": "TranslationResult",
+  "type": "object"
+}

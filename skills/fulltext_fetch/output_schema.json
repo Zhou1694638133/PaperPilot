@@ -1,0 +1,42 @@
+{
+  "additionalProperties": true,
+  "properties": {
+    "coverage": {
+      "enum": [
+        "abstract",
+        "fulltext"
+      ],
+      "title": "Coverage",
+      "type": "string"
+    },
+    "markdown": {
+      "title": "Markdown",
+      "type": "string"
+    },
+    "mode": {
+      "enum": [
+        "live",
+        "demo"
+      ],
+      "title": "Mode",
+      "type": "string"
+    },
+    "skill_version": {
+      "title": "Skill Version",
+      "type": "string"
+    },
+    "source": {
+      "title": "Source",
+      "type": "string"
+    }
+  },
+  "required": [
+    "coverage",
+    "markdown",
+    "mode",
+    "skill_version",
+    "source"
+  ],
+  "title": "SkillResult",
+  "type": "object"
+}

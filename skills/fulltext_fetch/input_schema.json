@@ -1,0 +1,77 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "skill_id": {
+      "enum": [
+        "paper_reader",
+        "paper_translator",
+        "recommendation_explainer",
+        "fulltext_fetch"
+      ],
+      "title": "Skill Id",
+      "type": "string"
+    },
+    "paper_id": {
+      "maxLength": 100,
+      "minLength": 1,
+      "title": "Paper Id",
+      "type": "string"
+    },
+    "mode": {
+      "default": "live",
+      "enum": [
+        "live",
+        "demo"
+      ],
+      "title": "Mode",
+      "type": "string"
+    },
+    "idempotency_key": {
+      "anyOf": [
+        {
+          "maxLength": 100,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Idempotency Key"
+    },
+    "language": {
+      "const": "zh-CN",
+      "default": "zh-CN",
+      "title": "Language",
+      "type": "string"
+    },
+    "scope": {
+      "default": "abstract",
+      "enum": [
+        "abstract",
+        "fulltext"
+      ],
+      "title": "Scope",
+      "type": "string"
+    },
+    "acknowledge_partial": {
+      "default": false,
+      "title": "Acknowledge Partial",
+      "type": "boolean"
+    },
+    "glossary": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "maxProperties": 100,
+      "title": "Glossary",
+      "type": "object"
+    }
+  },
+  "required": [
+    "skill_id",
+    "paper_id"
+  ],
+  "title": "JobInput",
+  "type": "object"
+}

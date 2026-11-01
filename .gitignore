@@ -1,0 +1,43 @@
+# Local runtime data and secrets
+.env
+.env.*
+!.env.example
+data/
+backend/.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+frontend/node_modules/
+frontend/dist/
+*.log
+tools/tectonic/*.exe
+tools/tectonic/*.zip
+
+# Local workspaces, generated papers, and validation artifacts
+.idea/
+.vscode/
+output/
+tmp/
+node_modules/
+dist/
+build/
+.venv/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+*.tsbuildinfo
+*.db
+*.db-*
+*.sqlite
+*.sqlite3
+*.sqlite3-*
+model-config.json
+*.pem
+*.key
+*.pdf
+# Private development brief; keep the public guide in README.md
+Codex_完整开发提示词.md
+# OS metadata
+.DS_Store
+Thumbs.db

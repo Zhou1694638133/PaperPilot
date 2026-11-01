@@ -1,0 +1,7 @@
+{
+  "id": "recommendation_explainer",
+  "name": "推荐依据解释",
+  "description": "用已有排序特征和精确摘要引文生成可追溯解释，无需模型密钥。",
+  "version": "2.0.0",
+  "requires_model": false
+}

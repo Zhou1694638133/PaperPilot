@@ -1,0 +1,7 @@
+{
+  "id": "fulltext_fetch",
+  "name": "全文读取",
+  "description": "优先解析 arXiv LaTeX 源文件，失败后回退 PDF；显示缺失内容、乱码与覆盖警告，不需要模型。",
+  "version": "2.0.4",
+  "requires_model": false
+}

@@ -1,0 +1,16 @@
+{
+  "version": "1.0.0",
+  "name": "黑色宋体双语段落对照",
+  "text_color": "#000000",
+  "chinese_font": "SimSun",
+  "english_font": "Times New Roman",
+  "body_size": 12,
+  "english_body_size": 11.5,
+  "body_leading": 20,
+  "first_line_indent": 24,
+  "paragraph_space_after": 10,
+  "title_size": 18,
+  "section_size": 15,
+  "label_size": 12,
+  "footer": "page_number_only"
+}
