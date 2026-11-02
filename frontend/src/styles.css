@@ -287,7 +287,8 @@ body{font-size:var(--font-body)}
 
 /* Stage three: readable opt-in schedules, evidence and reversible feedback. */
 .stage-three{max-width:1200px;margin:0 auto;min-width:0}.stage-three>.button-row{margin:20px 0}
-.stage-three .settings-card{margin:24px 0}.stage-three .field-label{margin:16px 0}
+.stage-three .settings-card{margin:24px 0}
+.subscription-fields{border:0;padding:0;margin:0;min-width:0}.stage-three .field-label{margin:16px 0}
 .stage-three .section-heading{display:flex;flex-wrap:wrap;align-items:center;gap:16px;justify-content:space-between}
 .stage-three input,.stage-three textarea,.stage-three select{max-width:100%;min-width:0;font:inherit}
 .stage-three .field-grid{grid-template-columns:repeat(2,minmax(0,1fr))}

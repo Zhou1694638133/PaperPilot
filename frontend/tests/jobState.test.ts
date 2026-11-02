@@ -24,3 +24,9 @@ test('new terminal result replaces active state and preserves other jobs', () =>
   assert.equal(merged.find(job => job.id === 'one')?.status, 'succeeded')
   assert.equal(merged.length, 2)
 })
+
+test('duplicate snapshots in one batch retain the newest update', () => {
+  assert.deepEqual(mergeJobs([], [running, failed]), [running])
+  assert.deepEqual(mergeJobs([failed], [running, queued]), [running])
+  assert.deepEqual(mergeJobs([], [queued, failed]), [queued])
+})

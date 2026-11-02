@@ -8,10 +8,9 @@ export function isOlderJob(incoming: Job, current?: Job): boolean {
 }
 
 export function mergeJobs(current: Job[], incoming: Job[]): Job[] {
-  const previous = new Map(current.map(job => [job.id, job]))
   const merged = new Map(current.map(job => [job.id, job]))
   for (const job of incoming) {
-    if (!isOlderJob(job, previous.get(job.id))) merged.set(job.id, job)
+    if (!isOlderJob(job, merged.get(job.id))) merged.set(job.id, job)
   }
   return [...merged.values()].sort((a, b) => b.created_at.localeCompare(a.created_at))
 }

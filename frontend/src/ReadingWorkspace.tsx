@@ -1,7 +1,7 @@
 import { translationAction } from './translationAction'
 import { OverallAnalysis } from './OverallAnalysis'
 import { TranslationDiagnostics, TranslationPrecheck } from './TranslationDiagnostics'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { api, errorMessage, statusLabel, terminalStatus, write } from './api'
 import { EmptyState, Icon } from './components'
 import { TranslationDownloads } from './TranslationDownloads'
@@ -79,7 +79,7 @@ export function ReadingWorkspace({ paper, jobs, modelReady, busy, onRun, onJobAc
     else if (action.action === 'start') onRun('paper_translator', 'fulltext', acknowledge)
   }
   const translateButton = <button className="button primary" disabled={action.disabled} title={action.reason || undefined} onClick={startTranslation}><Icon name="translate" size={15}/>{action.label}</button>
-  return <section className="fulltext-workspace detail-section"><div className="section-heading"><div><div className="eyebrow">READ · UNDERSTAND · TRANSLATE</div><h3>全文研究工作台</h3></div><button className="icon-button" aria-label="刷新全文状态" onClick={() => setRefresh(value => value + 1)}><Icon name="refresh"/></button></div>
+  return <section className="fulltext-workspace detail-section"><div className="section-heading"><div><h3>全文研究工作台</h3></div><button className="icon-button" aria-label="刷新全文状态" onClick={() => setRefresh(value => value + 1)}><Icon name="refresh"/></button></div>
     <div className="button-row"><button className="button primary" disabled={paper.mode !== 'live' || busy === 'fulltext_fetch' || !!active} onClick={() => onRun('fulltext_fetch', 'fulltext', false)}>{document ? '检查全文任务' : '读取全文'}<Icon name="book" size={15}/></button><button className="button" disabled={!available || !!active || busy === 'paper_reader'} onClick={() => { setTab('reading'); onRun('paper_reader', 'fulltext', acknowledge) }}>结构化精读</button><button className="button" disabled={!document} onClick={() => setTab('analysis')}>论文总体分析</button>{translateButton}{document && <a className="button" href={`/api/reports/pdf?${new URLSearchParams({paper_id: paper.id, mode: paper.mode, scope: 'fulltext'})}`} download>导出原文解析 PDF</a>}</div>
     <div className="translation-start-panel" aria-label="全文翻译状态">
       <p>{downloadReady ? '全文翻译已完成，中文翻译和双语对照共用同一份译文。' : !translation ? `尚未开始全文翻译。${document ? `已解析 ${document.paragraph_count} 块原文，提交后由 worker 逐段翻译并保存检查点。` : '请先读取全文。'}` : downloadStatus}</p>
@@ -135,7 +135,7 @@ export function GlossaryEditor({ modelReady, jobs, onJobs }: { modelReady: boole
       const data = await api<{version:number}>('/glossary', write('PUT', {version, terms})); setVersion(data.version); setMessage(`已保存术语表 v${data.version}。新任务使用此版本；已有任务保持原术语快照，避免混译。`)
     } catch(cause) { setMessage(errorMessage(cause)) } finally { setBusy(false) }
   }
-  return <section className="settings-card"><div className="eyebrow">CONSISTENT RESEARCH LANGUAGE</div><h2>共享术语表 · v{version || '…'}</h2><p className="muted">收藏、已读或添加标签/笔记后，自动从真实论文的标题与摘要积累专业术语；不感兴趣和演示论文不参与。提取使用已配置模型，可能产生调用费用。</p><p className="muted">合并时去重并保留已有译法，原文依据和译法冲突可在任务中心查看。最多保存 100 条，超出部分保留在任务产物中。新翻译使用最新术语表，已有任务保持原快照；请等待提取完成后再创建翻译任务。</p><div className="button-row"><button className="button" disabled={busy || !modelReady} onClick={() => void learn()}>从已标记论文补充术语</button><a className="button" href="#jobs">查看提取任务与原文依据</a></div>{!modelReady && <p className="notice">请先在研究偏好配置模型，再补充历史论文术语。</p>}{jobs.filter(job => job.skill_id === 'glossary_extractor').slice(0, 10).map(job => <p className="fineprint" key={job.id}>{job.paper_id} · {statusLabel(job.status)} · {job.stage}{job.error ? ` · ${job.error}` : ''}</p>)}<label className="field-label">每行一个术语：英文 = 中文<textarea className="glossary-input" rows={18} value={text} disabled={busy || !version} onChange={event => setText(event.target.value)} spellCheck={false}/></label><div className="button-row"><button className="button primary" disabled={busy || !version} onClick={() => void save()}>保存新版本</button><button className="button" disabled={busy} onClick={() => void load()}>重新加载</button></div>{message && <p className="notice" role="status">{message}</p>}</section>
+  return <section className="settings-card"><h2>共享术语表 · v{version || '…'}</h2><p className="muted">收藏、已读或添加标签/笔记后，自动从真实论文的标题与摘要积累专业术语；不感兴趣和演示论文不参与。提取使用已配置模型，可能产生调用费用。</p><p className="muted">合并时去重并保留已有译法，原文依据和译法冲突可在任务中心查看。最多保存 100 条，超出部分保留在任务产物中。新翻译使用最新术语表，已有任务保持原快照；请等待提取完成后再创建翻译任务。</p><div className="button-row"><button className="button" disabled={busy || !modelReady} onClick={() => void learn()}>从已标记论文补充术语</button><a className="button" href="#jobs">查看提取任务与原文依据</a></div>{!modelReady && <p className="notice">请先在研究偏好配置模型，再补充历史论文术语。</p>}{jobs.filter(job => job.skill_id === 'glossary_extractor').slice(0, 10).map(job => <p className="fineprint" key={job.id}>{job.paper_id} · {statusLabel(job.status)} · {job.stage}{job.error ? ` · ${job.error}` : ''}</p>)}<label className="field-label">每行一个术语：英文 = 中文<textarea className="glossary-input" rows={18} value={text} disabled={busy || !version} onChange={event => setText(event.target.value)} spellCheck={false}/></label><div className="button-row"><button className="button primary" disabled={busy || !version} onClick={() => void save()}>保存新版本</button><button className="button" disabled={busy} onClick={() => void load()}>重新加载</button></div>{message && <p className="notice" role="status">{message}</p>}</section>
 }
 
 interface Comparison { papers: {id:string;title:string;url:string;published:string;version:number;publication:Publication;coverage:string;reading:Reading|null;abstract:string;fulltext_status:string}[]; warning:string }
@@ -144,7 +144,24 @@ export function ComparisonWorkspace({ papers, mode, onRemove, onOpen }: {papers:
   const [error,setError] = useState('')
   const [busy,setBusy] = useState(false)
   const ids = papers.map(paper=>paper.id).join(',')
-  useEffect(() => { setResult(null); setError('') }, [ids,mode])
-  async function compare() { setBusy(true); setError(''); try { setResult(await api<Comparison>('/compare',write('POST',{ids:papers.map(p=>p.id),mode}))) } catch(cause) {setError(errorMessage(cause))} finally {setBusy(false)} }
-  return <><section className="section-banner"><div className="eyebrow">COMPARE WITH EVIDENCE</div><h2>并列证据，看清研究差异。</h2><p>从发现页或详情选择 2–4 篇论文。比较真实元数据与已有精读结果，不对不同基准的分数作虚假排名。</p></section><div className="comparison-selection">{papers.map(paper=><div key={paper.id}><button className="text-button" onClick={()=>onOpen(paper)}>{paper.title}</button><button className="icon-button" aria-label={`从对比移除 ${paper.title}`} onClick={()=>onRemove(paper.id)}><Icon name="close"/></button></div>)}</div><div className="button-row"><button className="button primary" disabled={papers.length<2||busy} onClick={()=>void compare()}>{busy?'正在读取证据…':'生成/刷新对比'}</button>{papers.length>=2&&<a className="button" href={`/api/reports/pdf?${new URLSearchParams({ids,mode})}`} download>导出对比 PDF</a>}</div>{error&&<p className="error-text" role="alert">{error}</p>}{papers.length<2&&<EmptyState title="再选择论文开始对比" icon="book"><p>已选择 {papers.length}/4 篇。选择内容保留至本次页面刷新。</p></EmptyState>}{result&&<><p className="notice">{result.warning}</p><div className="comparison-grid">{result.papers.map(paper=><article className="comparison-paper" key={paper.id}><PublicationBadge publication={paper.publication}/><h3><a href={paper.url} target="_blank" rel="noreferrer">{paper.title} ↗</a></h3><p className="fineprint">首次公开 {paper.published.slice(0,10)} · v{paper.version}<br/>覆盖：{paper.coverage === 'fulltext' ? '已解析全文精读' : paper.coverage === 'abstract' ? '摘要精读' : '元数据与摘要'}</p>{fields.slice(0,4).map(([key,label])=><section key={key}><h4>{label}</h4><p>{paper.reading?.[key].text || '尚未生成精读结果，未核实。'}</p>{paper.reading?.[key].evidence.map((quote,index)=><blockquote key={index}>{quote}</blockquote>)}</section>)}<details><summary>摘要原文</summary><p>{paper.abstract}</p></details></article>)}</div></>}</>
+  const comparisonRequest = useRef<AbortController | null>(null)
+  useEffect(() => {
+    setResult(null); setError(''); setBusy(false)
+    return () => { comparisonRequest.current?.abort() }
+  }, [ids,mode])
+  async function compare() {
+    comparisonRequest.current?.abort()
+    const controller = new AbortController()
+    comparisonRequest.current = controller
+    setBusy(true); setError('')
+    try {
+      const next = await api<Comparison>('/compare', {...write('POST', {ids:papers.map(p=>p.id), mode}), signal:controller.signal})
+      if (!controller.signal.aborted) setResult(next)
+    } catch (cause) {
+      if (!controller.signal.aborted) setError(errorMessage(cause))
+    } finally {
+      if (!controller.signal.aborted) setBusy(false)
+    }
+  }
+  return <><section className="section-banner"><h2>对比论文内容与精读结果</h2><p>从发现页或详情选择 2–4 篇论文。展示论文信息和已有精读结果；不同实验基准的分数不直接排名。</p></section><div className="comparison-selection">{papers.map(paper=><div key={paper.id}><button className="text-button" onClick={()=>onOpen(paper)}>{paper.title}</button><button className="icon-button" aria-label={`从对比移除 ${paper.title}`} onClick={()=>onRemove(paper.id)}><Icon name="close"/></button></div>)}</div><div className="button-row"><button className="button primary" disabled={papers.length<2||busy} onClick={()=>void compare()}>{busy?'正在读取证据…':'生成/刷新对比'}</button>{papers.length>=2&&<a className="button" href={`/api/reports/pdf?${new URLSearchParams({ids,mode})}`} download>导出对比 PDF</a>}</div>{error&&<p className="error-text" role="alert">{error}</p>}{papers.length<2&&<EmptyState title="再选择论文开始对比" icon="book"><p>已选择 {papers.length}/4 篇。选择内容保留至本次页面刷新。</p></EmptyState>}{result&&<><p className="notice">{result.warning}</p><div className="comparison-grid">{result.papers.map(paper=><article className="comparison-paper" key={paper.id}><PublicationBadge publication={paper.publication}/><h3><a href={paper.url} target="_blank" rel="noreferrer">{paper.title} ↗</a></h3><p className="fineprint">首次公开 {paper.published.slice(0,10)} · v{paper.version}<br/>覆盖：{paper.coverage === 'fulltext' ? '已解析全文精读' : paper.coverage === 'abstract' ? '摘要精读' : '元数据与摘要'}</p>{fields.slice(0,4).map(([key,label])=><section key={key}><h4>{label}</h4><p>{paper.reading?.[key].text || '尚未生成精读结果，未核实。'}</p>{paper.reading?.[key].evidence.map((quote,index)=><blockquote key={index}>{quote}</blockquote>)}</section>)}<details><summary>摘要原文</summary><p>{paper.abstract}</p></details></article>)}</div></>}</>
 }

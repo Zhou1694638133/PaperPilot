@@ -55,7 +55,7 @@ def keyword_present(keyword: str, text: str) -> bool:
 def matches_filters(paper: dict, profile: dict, days: int, now: datetime | None = None) -> bool:
     now = now or datetime.now(timezone.utc)
     published = datetime.fromisoformat(paper["published"].replace("Z", "+00:00"))
-    if days and published < now - timedelta(days=days):
+    if published > now or (days and published < now - timedelta(days=days)):
         return False
     text = paper["title"] + " " + paper["abstract"]
     def matches_term(term: str) -> bool:

@@ -60,6 +60,21 @@ def test_date_filter_uses_first_publication_not_update():
     assert paper["published"] != paper["updated"]
 
 
+
+@pytest.mark.parametrize("published,days,expected", [
+    ("2026-11-02T12:00:01Z", 730, False),
+    ("2026-11-02T12:00:01Z", 0, False),
+    ("2026-11-02T12:00:00Z", 730, True),
+    ("2026-11-02T20:00:00+08:00", 730, True),
+    ("2026-11-01T12:00:00Z", 1, True),
+    ("2026-11-01T11:59:59Z", 1, False),
+])
+def test_date_filter_enforces_both_window_boundaries(published, days, expected):
+    paper = parse_feed(atom_feed(atom_entry(published=published)))["papers"][0]
+    now = datetime(2026, 11, 2, 12, tzinfo=timezone.utc)
+    assert matches_filters(paper, repo.get_profile(), days, now) is expected
+
+
 def test_canonical_id_accepts_legacy_and_versions():
     assert canonical_id("http://arxiv.org/abs/2301.00001v12") == ("2301.00001", 12)
     assert canonical_id("https://arxiv.org/abs/hep-th/9901001v2") == ("hep-th/9901001", 2)

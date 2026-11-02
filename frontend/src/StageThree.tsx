@@ -76,7 +76,7 @@ export function StageThree({ page, mode, jobs, modelReady, onJob, onOpen, onTask
   function reset() { setEditing(null); setDraft(initialDraft()); createRequest.current = null }
   const liveOnly = mode !== 'live' && page !== 'feedback'
   return <div className="stage-three">
-    <section className="section-banner"><div className="eyebrow">FOLLOW TOPICS · BUILD YOUR RESEARCH MEMORY</div><h2>{page === 'subscriptions' ? '让研究方向持续更新。' : page === 'weekly' ? '一周线索，逐条可追溯。' : '让推荐听见你的判断。'}</h2>
+    <section className="section-banner"><h2>{page === 'subscriptions' ? '按主题定期检索' : page === 'weekly' ? '本期论文与推荐依据' : '查看和撤回反馈'}</h2>
       <p>{page === 'feedback' ? '反馈保留原始匹配分，可随时撤回；不会自动修改研究偏好。' : '优先核实 CCF A 正式会议论文，未找到时回退 arXiv；默认只纳入首次公开近两年的论文。'}</p></section>
     <div className="button-row"><button className="button" disabled={busy || loading} onClick={() => report ? void openReport(report.id) : setRefresh(n => n + 1)}>刷新列表</button><button className="button" onClick={onTasks}>查看任务进度</button>{!modelReady && <button className="button" onClick={onSettings}>配置模型</button>}</div>
     {!modelReady && <p className="notice">模型未配置：真实检索、规则周报和反馈可用；模型精读与翻译需配置后主动运行。</p>}
@@ -92,6 +92,7 @@ export function StageThree({ page, mode, jobs, modelReady, onJob, onOpen, onTask
         setNotice(saved.enabled ? '订阅已启用，下次到期由 worker 生成。' : '已保存为暂停；可手动生成本期周报。')
         reset(); setRefresh(n => n + 1)
       }) }}>
+        <fieldset className="subscription-fields" disabled={busy} aria-label="订阅设置">
         <div className="section-heading"><h2>{editing ? '编辑主题订阅' : '创建主题订阅'}</h2></div>
         <div className="button-row">{['Agent 强化学习','大模型后训练'].map(topic => <button className="chip" type="button" key={topic} onClick={() => setDraft(d => ({...d, topic, name:topic + '周报', query:''}))}>{topic}</button>)}</div>
         <div className="field-grid"><label className="field-label">订阅名称<input required maxLength={100} value={draft.name} onChange={e => setDraft({...draft,name:e.target.value})}/></label><label className="field-label">研究方向<input required maxLength={160} value={draft.topic} onChange={e => setDraft({...draft,topic:e.target.value,query:''})}/></label></div>
@@ -100,12 +101,13 @@ export function StageThree({ page, mode, jobs, modelReady, onJob, onOpen, onTask
         <div className="field-grid"><label className="field-label">来源优先级<select value={draft.source} onChange={e => setDraft({...draft,source:e.target.value as SubscriptionDraft['source']})}><option value="ccfa_first">CCF A 核实优先 · arXiv 回退</option><option value="arxiv">arXiv</option></select></label><label className="field-label">首次公开日期<select value={draft.days} onChange={e => setDraft({...draft,days:Number(e.target.value)})}>{[[730,'近两年（默认）'],[365,'近一年'],[90,'近 90 天'],[30,'近 30 天']].map(([n,label]) => <option key={n} value={n}>{label}</option>)}</select></label></div>
         <div className="field-grid"><label className="field-label">必须包含（逗号分隔）<input value={draft.include_keywords.join(',')} onChange={e => setDraft({...draft,include_keywords:e.target.value.split(/[,，]/)})}/></label><label className="field-label">排除关键词<input value={draft.exclude_keywords.join(',')} onChange={e => setDraft({...draft,exclude_keywords:e.target.value.split(/[,，]/)})}/></label></div>
         <div className="field-grid"><label className="field-label">每周生成时间（北京时间）<div className="button-row"><select value={draft.weekday} onChange={e => setDraft({...draft,weekday:Number(e.target.value)})}>{weekdays.map((day,i) => <option key={day} value={i}>{day}</option>)}</select><select aria-label="生成小时" value={draft.hour} onChange={e => setDraft({...draft,hour:Number(e.target.value)})}>{Array.from({length:24},(_,n) => <option key={n} value={n}>{String(n).padStart(2,'0')}:00</option>)}</select></div></label><label className="field-label">每期最多收录<input type="number" min={1} max={30} value={draft.limit} onChange={e => setDraft({...draft,limit:Number(e.target.value)})}/></label></div>
-        <label className="subscription-optin"><input type="checkbox" checked={draft.model_enabled} onChange={e=>setDraft({...draft,model_enabled:e.target.checked})}/>主动开启模型增强周报（可能产生模型调用费用）</label>
+        <label className="subscription-optin"><input type="checkbox" checked={draft.model_enabled} onChange={e=>setDraft({...draft,model_enabled:e.target.checked})}/>启用模型语义评估（可能产生模型调用费用）</label>
         {draft.model_enabled && <label className="field-label">每期最多语义评估候选数（1–10，含缓存复用）<input type="number" min={1} max={10} value={draft.model_limit} onChange={e=>setDraft({...draft,model_limit:Number(e.target.value)})}/></label>}
         <p className="fineprint">只评估本订阅主题，保留关键词分。相同来源、模型与主题复用结果；未配置模型、失败或超出上限时降级。开启后也适用于定时周报。</p>
-        <label className="subscription-optin"><input type="checkbox" checked={draft.enabled} onChange={e => setDraft({...draft,enabled:e.target.checked})}/>主动开启每周订阅</label>
+        <label className="subscription-optin"><input type="checkbox" checked={draft.enabled} onChange={e => setDraft({...draft,enabled:e.target.checked})}/>启用每周订阅</label>
         <p className="fineprint">需独立 worker 持续运行。错过的计划在重启后补生成当前周一次，不补发所有历史周。仅站内周报，不发送邮件；只有主动开启模型增强后才按上限调用模型。</p>
-        <div className="button-row"><button className="button primary" disabled={busy} type="submit">{busy ? '保存中…' : '保存订阅'}</button>{editing && <button className="button" type="button" onClick={reset}>取消编辑</button>}</div>
+        <div className="button-row"><button className="button primary" disabled={busy} type="submit">{busy ? '处理中…' : '保存订阅'}</button>{editing && <button className="button" type="button" onClick={reset}>取消编辑</button>}</div>
+        </fieldset>
       </form>
       {online === false && <p className="notice">worker 当前离线；已保存的计划与任务不会丢失，启动 worker 后继续。</p>}
       {loading ? <p role="status">正在读取订阅…</p> : !subscriptions.length ? <p className="notice">暂无订阅。创建并勾选开启后，系统才会按计划检索。</p> : subscriptions.map(s => <article className="settings-card" key={s.id}>
